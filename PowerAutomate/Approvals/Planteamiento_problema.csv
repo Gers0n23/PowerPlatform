@@ -1,0 +1,30 @@
+La solicitud del cliente es abordar el flujo de aprobaciones que actualmente tienen implementado usando forms, y powerautomate. 
+El cliente desea que se le proponga una solución que le permita tener un flujo de aprobaciones más robusto y escalable.
+Actualmente el cliente tiene un flujo de aprobaciones que se activa cuando un usuario de la caja de alguna de las sucursales llena un formulario de liberacion de nota de venta.
+llena los siguientes campos:
+- Sucursal
+- Nota de venta
+- Fecha de liberacion
+- Comentarios
+- Estatus
+- cliente
+- monto
+
+Una vez que se llena el formulario, se envia un mensaje por Teams a un grupo de aprobadores, en el mensaje se incluye un link al formulario que se lleno.
+Los aprobadores son los analistas del area de Creditos y Cobranza. Cualquiera de los analistas puede aprobar o rechazar la solicitud.
+Si la solicitud es aprobada, se envia un mensaje por Teams al solicitante indicando que su solicitud fue aprobada.
+Si la solicitud es rechazada, se envia un mensaje por Teams al solicitante indicando que su solicitud fue rechazada.
+
+Por lo general se solicitan entre 100 y 150 aprobaciones diarias en promedio.
+Los usuarios de Creditos y Cobranza son 9 en total.
+Los usuarios de las cajas de las sucursales son 23 en total.
+
+El problema que se produce son los siguientes:
+Al estar conectado directamente el formulario con el flujo de aprobaciones, hay un limite muy bajo en la cantidad de registros soportados.
+No hay un historico de las aprobaciones realizadas, y es poco amigable para hacer consultas rapidas.
+No hay un control de los tiempos de respuesta de los aprobadores.
+El flujo fue creado con la cuenta personal de un usuario, y no se tiene un control de acceso a la informacion.
+Cada cierto tiempo se debe vaciar el formulario, o crear uno nuevo para evitar que se sature.
+Al vaciar el formulario, se pierde el historico de las aprobaciones realizadas.
+El sistema de los formularios no esta conectado al sistema ERP, por lo que deben buscar manualmente la informacion de la nota de venta.
+Faltan metricas para mejorar el nivel de servicio.
