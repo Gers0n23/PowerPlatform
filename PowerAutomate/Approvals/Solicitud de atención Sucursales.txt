@@ -1,0 +1,68 @@
+1. Sucursal *
+
+Antofagasta
+Calama
+Chillan FC
+Concepcion
+Copiapo
+Coquimbo FC
+Curico
+General Velasquez
+Los Angeles FC
+Osorno FC
+Puerta Norte
+Puerta Sur
+Puerto Montt
+Puerto Montt FC
+Rancagua FC
+Talca
+Talcahuano FC
+Televenta
+Temuco
+Temuco FC
+Valdivia FC
+Valparaiso
+Viña del Mar
+(Nota: En el OCR se han detectado posibles errores en algunos nombres, por ejemplo “Copiapd” y “Curicd”. Se ha transcrito tal como aparece.)
+
+2. Fecha de solicitud a CyC *
+
+(No se especifican opciones, se espera que se ingrese una fecha)
+3. Nombre y apellido del solicitante *
+
+(Campo de texto para ingresar nombre y apellido)
+4. BP Cliente (Registrar número de BP cliente asociado a la solicitud) *
+
+(Campo numérico; se espera ingresar un número)
+5. Tipo de solicitud * Opciones disponibles:
+
+Liberacion de Nota de venta
+Compensacion
+Devolucién de cheque protestado o en cartera
+Eliminacion
+Traspaso entre cuentas de clientes
+Solicitud de prorroga
+Otras
+(Nota: Existe una línea “O O00 0 0” que podría corresponder a otro error en OCR, por lo que se ignora o se considera parte de la opción “Otras” según el contexto.)
+
+6. Numero de la NV a liberar
+
+(Campo para ingresar el número; no se presentan opciones predefinidas)
+7. Fecha compromiso de pago (Para liberar bloqueo por facturas vencidas)
+
+(Campo para ingresar fecha; no se presentan opciones predefinidas)
+8. Medio de pago frecuente (para liberaciones de NV indicar si cliente paga con cheque, transferencia u otro)
+
+(Campo para indicar el medio de pago; las opciones mencionadas son: cheque, transferencia u otro. No se presentan como opciones fijas, es un campo de texto)
+9. Detalle devolucién de cheque (número de cheque a devolver)
+
+(Campo para ingresar el número de cheque; no se presentan opciones predefinidas)
+10. Observaciones
+
+(Campo de texto para observaciones; no se presentan opciones predefinidas)
+11. Monto a eliminar $
+
+(Campo numérico; se espera ingresar un número)
+12. Motivo de eliminacion
+
+(Campo para ingresar el motivo; no se presentan opciones predefinidas)

@@ -1,0 +1,53 @@
+Solicitudes de Flota
+Favor completar todos los campos que aparecen para poder procesar de manera correcta la informacion
+
+Datos generales
+
+1. Sucursal *
+
+Chillan FC
+Coquimbo FC
+Los Angeles FC
+Osorno FC
+Puerta Norte
+Puerta Sur
+Puerto Montt FC
+Rancagua FC
+Talcahuano FC
+Temuco FC
+Valdivia FC
+(Nota: Hay un posible error OCR en “O00 0000 0 0”, que probablemente no es una opción válida.)
+
+2. Fecha de solicitud a CyC *
+
+(Campo para ingresar una fecha)
+3. Nombre y apellido del solicitante *
+
+(Campo de texto para ingresar nombre y apellido)
+Datos del cliente
+
+4. RUT Cliente (Registrar sin puntos y con guion) *
+
+(Campo para ingresar el RUT)
+5. Monto del servicio $ *
+
+(Campo numérico; se espera ingresar un monto)
+6. Datos contacto de pago (Nombre, teléfono y/o correo electrónico)
+(Este campo no es obligatorio, pero se recomienda completar para gestión en caso de incumplimiento.)
+
+(Campo de texto para ingresar información de contacto)
+Datos de bloqueo
+
+7. Tipo de Bloqueo * Opciones disponibles:
+
+Facturas vencidas
+Dicom
+Límite de crédito
+Otras
+8. Fecha compromiso de pago (Para liberar bloqueo por facturas vencidas)
+(Si no se tiene esta información, mencionarlo en la siguiente pregunta.)
+
+(Campo para ingresar una fecha)
+9. Cualquier información adicional que aporte a una mejor evaluación de liberación la puedes indicar acá.
+
+(Campo de texto para observaciones adicionales)
