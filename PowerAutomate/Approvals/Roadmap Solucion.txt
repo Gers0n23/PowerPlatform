@@ -1,0 +1,902 @@
+Roadmap de Implementación: Sistema de Aprobaciones con PowerApps, SharePoint y Teams
+Resumen Ejecutivo
+Este documento detalla el plan de implementación para un sistema de aprobaciones que reemplazará los actuales formularios de Microsoft Forms. La solución se basará en PowerApps para la captura de datos, SharePoint para el almacenamiento y gestión de la información, y Teams para las notificaciones y proceso de aprobación. El sistema ha sido diseñado para soportar entre 100-150 solicitudes diarias y permitir a 9 analistas de Créditos y Cobranza gestionar las aprobaciones de 23 usuarios de cajas en sucursales.
+1. Estructura de SharePoint
+1.1 Lista Principal: "Solicitudes_Maestro"
+Esta lista centralizada registrará todas las solicitudes y su estado de aprobación.
+Campo	Tipo	Descripción	Indexado
+ID	Autonumérico	Identificador único (generado por SharePoint)	Sí
+TipoSolicitud	Opción	Categoría de la solicitud (ver tipos abajo)	Sí
+Solicitante	Usuario	Usuario que realiza la solicitud	Sí
+FechaSolicitud	Fecha/Hora	Momento de creación (con hora y minutos, automático)	Sí
+Sucursal	Opción	Sucursal desde donde se genera la solicitud	Sí
+Estado	Opción	Pendiente/Aprobado/Rechazado	Sí
+Aprobador	Usuario	Analista que procesa la solicitud	No
+FechaRespuesta	Fecha/Hora	Momento de la aprobación/rechazo (con hora y minutos)	No
+TiempoRespuesta	Calculado	Minutos entre solicitud y respuesta	No
+TiempoRespuestaSLA	Indicador	Verde/Amarillo/Rojo según cumplimiento de SLA	No
+ComentariosRespuesta	Texto múltiple	Justificación del aprobador	No
+IDListaDetalle	Texto	ID del registro en la lista de detalle correspondiente	Sí
+Monto	Moneda	Valor monetario de la solicitud (cuando aplique)	No
+ConversacionTeams	URL	Enlace al mensaje de Teams	No
+Tipos de solicitud:
+•	Liberación Nota de Venta (SolicitudAtenciónSucursales)
+•	Solicitud Flota (SolicitudesFlota)
+•	Confirmación Transferencia (SolicitudConfirmaciónTransfencias)
+•	Devolución/Anulación TC (SolicitudDevolucionAnulacionTC)
+•	Excepción Cheques (SolicitudExcepcionCheques)
+•	Registro Cobranza (RegistroCobranzaAsistentes)
+•	KPI Cajeras (FormularioKPICajeras)
+1.2 Listas Detalle
+Se crearán listas específicas para cada tipo de formulario, relacionadas con la lista principal a través del campo IDListaDetalle:
+1.2.1 Lista "Liberacion_Nota_Venta"
+Campo	Tipo	Descripción
+ID	Autonumérico	Identificador único
+IDSolicitudMaestro	Lookup	Relación con Solicitudes_Maestro
+BP_Cliente	Número	Código de cliente en sistema
+NotaVenta	Texto	Número de nota de venta
+FechaLiberacion	Fecha	Fecha solicitada para liberación
+Comentarios	Texto múltiple	Justificación de la solicitud
+NombreCliente	Texto	Nombre del cliente
+MedioPagoFrecuente	Texto	Método habitual de pago del cliente
+FechaCompromisoPago	Fecha	Para liberaciones con facturas vencidas
+TipoSolicitudDetalle	Opción	Subtipo dentro de esta categoría
+1.2.2 Lista "Solicitudes_Flota"
+Campo	Tipo	Descripción
+ID	Autonumérico	Identificador único
+IDSolicitudMaestro	Lookup	Relación con Solicitudes_Maestro
+RUTCliente	Texto	RUT del cliente (formato validado)
+MontoServicio	Moneda	Valor del servicio solicitado
+DatosContactoPago	Texto múltiple	Información de contacto para pagos
+TipoBloqueo	Opción	Facturas vencidas/Dicom/Límite crédito/Otras
+FechaCompromisoPago	Fecha	Para liberaciones con facturas vencidas
+InformacionAdicional	Texto múltiple	Datos complementarios
+1.2.3 Lista "Confirmacion_Transferencias"
+Campo	Tipo	Descripción
+ID	Autonumérico	Identificador único
+IDSolicitudMaestro	Lookup	Relación con Solicitudes_Maestro
+BP_Cliente	Número	Código de cliente en sistema
+RUTCliente	Texto	RUT del cliente (formato validado)
+TipoConfirmacion	Opción	Transferencia/Depósito/Webpay
+FechaOperacion	Fecha	Fecha de la transferencia/depósito/webpay
+RUTGirador	Texto	RUT o nombre del girador
+Monto	Moneda	Valor de la transferencia
+Comprobante	URL	Enlace al documento subido
+Observaciones	Texto múltiple	Información adicional
+1.2.4 Lista "Devolucion_Anulacion_TC"
+Campo	Tipo	Descripción
+ID	Autonumérico	Identificador único
+IDSolicitudMaestro	Lookup	Relación con Solicitudes_Maestro
+BP_Cliente	Número	Código de cliente en sistema
+RUTCliente	Texto	RUT del cliente
+TipoSolicitud	Opción	Devolución cliente/Genérico/Tercero/Anulación TC
+BoletaCliente	URL	Enlace al documento subido
+TipoSaldoFavor	Opción	Nota crédito/Anticipo
+NumBoletaFactura	Texto	Número de documento relacionado
+FechaEmisionDocumento	Fecha	Fecha de emisión del documento
+NumNotaCredito	Texto	Número de nota de crédito
+FechaNotaCredito	Fecha	Fecha de la nota de crédito
+MontoDevolucion	Moneda	Valor a devolver
+MotivoNotaCredito	Opción	Producto no sirve/Garantía/Otras
+DatosBancarios	Texto múltiple	Datos para transferencia
+DatosAnulacionTC	Texto múltiple	Datos específicos para TC
+1.2.5 Lista "Excepcion_Cheques"
+Campo	Tipo	Descripción
+ID	Autonumérico	Identificador único
+IDSolicitudMaestro	Lookup	Relación con Solicitudes_Maestro
+BP_Cliente	Número	Código de cliente en sistema
+RUTGirador	Texto	RUT del girador del cheque
+RUTCliente	Texto	RUT del cliente
+CondicionPago	Opción	Contado/Línea de crédito
+TipoPago	Opción	Venta/Pago de facturas
+FolioFactura	Texto	Número de factura relacionada
+NotaVenta	Texto	Número de nota de venta
+MontoVenta	Moneda	Valor de la operación
+MotivoRechazoORSAN	Texto	Causa del rechazo en sistema
+FechasVencimiento	Texto	Fechas de vencimiento de cheques
+NumerosCheques	Texto múltiple	Lista de números de cheque
+Observaciones	Texto múltiple	Información adicional
+1.2.6 Lista "Registro_Cobranza"
+Campo	Tipo	Descripción
+ID	Autonumérico	Identificador único
+IDSolicitudMaestro	Lookup	Relación con Solicitudes_Maestro
+AsistenteCobranza	Opción	Nombre del asistente
+BP_Cliente	Número	Código de cliente en sistema
+RUTCliente	Texto	RUT del cliente (opcional)
+RazonSocial	Texto	Nombre de la empresa
+TipoGestion	Opción	Correo/Llamada/Liberación NV/Protesto/Otras
+FechaCompromisoPago	Fecha	Fecha acordada para pago
+Observaciones	Texto múltiple	Detalles de la gestión
+FechaSeguimiento	Fecha	Próxima fecha de seguimiento
+MotivoSeguimiento	Texto	Razón del seguimiento
+EstadoPago	Booleano	Pagado/No pagado
+1.2.7 Lista "KPI_Cajeras"
+Campo	Tipo	Descripción
+ID	Autonumérico	Identificador único
+IDSolicitudMaestro	Lookup	Relación con Solicitudes_Maestro
+Opcion	Opción	Cheque enmendado/Eliminación de pago por error
+BP_Cliente	Número	Código de cliente en sistema
+FechaCierreCaja	Fecha	Fecha de cierre de caja
+NroCheque	Texto	Número del cheque (si aplica)
+Monto	Moneda	Valor monetario
+MotivoError	Texto múltiple	Explicación del error
+ImagenCheque	URL	Enlace al documento subido
+1.3 Lista "Configuracion_Aprobadores"
+Esta lista define quién puede aprobar qué tipos de solicitudes y en qué condiciones.
+Campo	Tipo	Descripción
+ID	Autonumérico	Identificador único
+TipoSolicitud	Opción	Categoría de solicitud
+GrupoAprobadores	Usuarios múltiples	Lista de aprobadores autorizados
+CanalTeams	Texto	ID del canal de Teams para notificaciones
+UmbralMontoAlto	Moneda	Monto que requiere aprobación especial
+AprobadoresMontoAlto	Usuarios múltiples	Aprobadores para montos elevados
+MinutosMaximoRespuesta	Número	SLA para respuesta (minutos)
+UmbralAlerta	Número	% del SLA para generar alerta (ej: 80%)
+1.4 Lista "Biblioteca_Documentos"
+Biblioteca centralizada para todos los archivos adjuntos.
+Campo	Tipo	Descripción
+Título	Texto	Nombre del documento
+IDSolicitudMaestro	Lookup	Relación con Solicitudes_Maestro
+TipoDocumento	Opción	Comprobante/Boleta/Cheque/Formulario/Otro
+FechaSubida	Fecha/Hora	Momento de la carga (automático)
+UsuarioSubida	Usuario	Quien cargó el documento
+2. Flujo de Power Automate Centralizado
+Se implementará un único flujo de Power Automate que atenderá todo el proceso de aprobación:
+2.1 Desencadenador
+•	Se activará cuando se cree un nuevo elemento en la lista "Solicitudes_Maestro"
+2.2 Acciones del Flujo
+1.	Identificación y Clasificación
+o	Obtener detalles de la solicitud principal
+o	Recuperar información de la lista de detalle correspondiente
+o	Determinar grupo de aprobadores según configuración
+2.	Notificación a Aprobadores
+o	Crear tarjeta adaptativa personalizada según tipo de solicitud
+o	Enviar notificación al canal de Teams correspondiente
+o	Registrar URL de la conversación en la lista principal
+3.	Procesamiento de Respuesta
+o	Escuchar acción de aprobador (mediante webhook) en tiempo real
+o	Capturar comentarios y decisión
+o	Actualizar estado en SharePoint inmediatamente
+o	Calcular tiempo de respuesta en minutos
+o	Registrar nivel de cumplimiento de SLA (dentro/fuera de tiempo)
+4.	Notificación al Solicitante
+o	Enviar mensaje a través de Teams
+o	Incluir enlace a registro en SharePoint para seguimiento
+5.	Actualización de Métricas
+o	Registrar estadísticas para reportes de SLA
+o	Actualizar dashboard si corresponde
+2.3 Manejo de Excepciones y SLAs
+•	Recordatorios automáticos al alcanzar el umbral de alerta (típicamente 15-20 minutos)
+•	Notificación con mayor prioridad a todos los aprobadores al 90% del tiempo SLA
+•	Escalamiento automático a supervisores una vez superado el SLA configurado
+•	Indicadores visuales en Teams (amarillo=cerca del límite, rojo=excedido)
+•	Dashboard en tiempo real de solicitudes pendientes con indicadores de tiempo
+•	Registro de errores para soporte técnico
+
+Fase 2: Desarrollo Simplificado de PowerApps - Plan Enfocado
+1. Enfoque Simplificado
+Para reducir el tiempo de desarrollo, nos centraremos exclusivamente en la creación de formularios funcionales que se integren correctamente con SharePoint. Esta versión simplificada permitirá implementar rápidamente la solución core mientras deja espacio para futuras mejoras.
+1.1 Alcance Reducido
+Componentes incluidos:
+•	Pantalla de inicio básica
+•	Formularios para cada tipo de solicitud
+•	Integración básica con SharePoint
+Componentes excluidos (para fases futuras):
+•	Portal de aprobadores (se gestionará directamente en Teams)
+•	Panel de administración y configuración
+•	Reportes y dashboards avanzados
+•	Funcionalidades avanzadas (offline, chatbot, etc.)
+1.2 Tecnología y Enfoque
+•	Tipo de App: Canvas App simplificada
+•	Formato: Optimizada principalmente para escritorio
+•	Tema: Básico con mínima personalización
+•	Desarrollo: Enfoque modular para facilitar expansión futura
+2. Diseño Simplificado de Interfaz
+2.1 Pantalla de Inicio
+ 
+Características incluidas:
+•	Lista simple de tipos de formulario accesibles según perfil
+•	Vista básica de "Mis solicitudes recientes" (últimas 5)
+•	Indicador simple de estado (pendiente/aprobado/rechazado)
+Navegación simplificada:
+•	Menú de lista sencillo para acceder a los formularios
+•	Botón para ver historial básico de solicitudes
+•	Botón de ayuda con instrucciones básicas
+3. Formularios de Solicitud (Enfoque Central)
+Se mantendrán todos los formularios planeados, optimizados para captura precisa de datos:
+3.1 Principios de Diseño para Todos los Formularios
+•	Validación esencial: Solo reglas críticas de negocio
+•	Campos obligatorios: Claramente marcados
+•	Estructura lineal: Secuencia lógica sin ramificaciones complejas
+•	Mensajes de error: Claros y específicos
+•	Confirmación de envío: Mensaje simple con resumen de la solicitud
+3.2 Formulario: Liberación Nota de Venta
+Características mantenidas:
+•	Validación básica del número de nota de venta
+•	Selector de sucursal
+•	Campo de monto con formato de moneda
+•	Sección de comentarios simple
+Optimizaciones:
+•	Formato simplificado en una sola pantalla
+•	Validaciones esenciales únicamente
+•	Campos organizados en grupos lógicos
+3.3 Formulario: Solicitudes Flota
+Características mantenidas:
+•	Validación básica de RUT
+•	Selector tipo de bloqueo
+•	Campos esenciales para cada tipo
+Optimizaciones:
+•	Formulario lineal sin lógica condicional compleja
+•	Validaciones en tiempo real solo para campos críticos
+3.4 Formulario: Confirmación Transferencias
+Características mantenidas:
+•	Carga de comprobante (funcionalidad básica)
+•	Campos según tipo de confirmación
+Optimizaciones:
+•	Simplificación de la carga de archivos
+•	Validaciones mínimas pero suficientes
+3.5 Formulario: Devolución/Anulación TC
+Características mantenidas:
+•	Campos necesarios según tipo de solicitud
+•	Carga de documentos esenciales
+Optimizaciones:
+•	Agrupación visual de campos relacionados
+•	Simplificación de opciones condicionales
+3.6 Formulario: Excepción Cheques
+Características mantenidas:
+•	Campos para información de cheques
+•	Validaciones básicas de formato
+Optimizaciones:
+•	Límite de 5 cheques por solicitud
+•	Simplificación de la lógica de validación
+3.7 Formulario: Registro Cobranza
+Características mantenidas:
+•	Selector de asistente
+•	Campos para registro básico
+Optimizaciones:
+•	Interfaz simplificada en una pantalla
+•	Enfoque en captura rápida de información
+3.8 Formulario: KPI Cajeras
+Características mantenidas:
+•	Selector de opción principal
+•	Campos específicos según opción elegida
+Optimizaciones:
+•	Simplificación de la carga de imágenes
+•	Reducción de campos opcionales
+4. Integración con SharePoint
+4.1 Funcionalidad Básica de Conexión
+•	Configuración de conexión con listas de SharePoint
+•	Almacenamiento de datos en listas apropiadas
+•	Manejo simple de archivos adjuntos
+•	Confirmación al usuario de envío exitoso
+4.2 Optimizaciones de Integración
+•	Validación previa al envío para reducir errores
+•	Manejo básico de errores de conexión
+•	Reintento automático de envío en caso de fallo temporal
+5. Plan de Implementación Acelerado
+5.1 Cronograma Reducido
+Semana	Actividad	Entregables
+1	Configuración y plantilla base	App con navegación y estructura básica
+2	Formularios grupo 1 (4 formularios)	Liberación NV, Flota, Confirmación y Devolución
+3	Formularios grupo 2 (3 formularios)	Excepción Cheques, Registro Cobranza y KPI
+4	Integración, pruebas y ajustes	App funcional con todos los formularios
+5.2 Metodología Optimizada
+•	Prototipado rápido: Versión funcional desde la primera semana
+•	Iteraciones cortas: Revisiones diarias de progreso
+•	Pruebas inmediatas: Validación de cada formulario al completarse
+•	Documentación esencial: Solo guías de usuario básicas
+6. Documentación y Soporte Básico
+6.1 Documentación Simplificada
+•	Manual de usuario simplificado (PDF)
+•	Instrucciones paso a paso para cada formulario
+•	Preguntas frecuentes (FAQ)
+6.2 Entrenamiento Acelerado
+•	Una sesión única de capacitación general (2 horas)
+•	Videos cortos de instrucción por formulario (5-8 minutos)
+•	Guía de referencia rápida imprimible
+7. Consideraciones para Futuras Expansiones
+Se diseñará la app de manera que permita futuras expansiones:
+•	Estructura modular que facilite agregar componentes
+•	Nomenclatura consistente para facilitar mantenimiento
+•	Comentarios en el código para documentar decisiones clave
+•	Separación clara entre UI y lógica de negocio
+7.1 Prioridades para Expansión Futura
+1.	Vista para aprobadores
+2.	Dashboard de métricas
+3.	Configuración del sistema
+4.	Funcionalidades avanzadas
+8. Ventajas del Enfoque Simplificado
+•	Tiempo de desarrollo reducido: De 6 a 4 semanas
+•	Enfoque en valor esencial: Formularios como componente crítico
+•	Reducción de complejidad: Menor riesgo de errores
+•	Adopción más rápida: Curva de aprendizaje reducida para usuarios
+•	Feedback temprano: Permite ajustes antes de invertir en componentes avanzados
+Fase 3: Implementación de Power Automate y Teams - Plan Detallado
+1. Estructura del Flujo Centralizado
+El sistema utilizará un único flujo de Power Automate que gestionará todo el proceso de aprobaciones, desde la creación de una nueva solicitud hasta la notificación de respuesta al solicitante.
+1.1 Arquitectura del Flujo
+ 
+1.2 Desencadenador
+•	Evento: Creación de un nuevo elemento en la lista "Solicitudes_Maestro" de SharePoint
+•	Frecuencia de comprobación: Inmediata (tiempo real)
+•	Datos iniciales: ID de solicitud, tipo, sucursal, solicitante, fecha/hora
+1.3 Estructura Principal
+El flujo seguirá esta secuencia lógica:
+1.	Recepción y clasificación de solicitud
+2.	Enriquecimiento de datos
+3.	Notificación a aprobadores
+4.	Procesamiento de respuesta
+5.	Actualización de registro
+6.	Notificación al solicitante
+7.	Manejo de SLAs
+2. Detalle de Componentes del Flujo
+2.1 Recepción y Clasificación
+Cuando se crea un elemento en "Solicitudes_Maestro"
+↓
+Obtener propiedades del elemento
+↓
+Condición: Verificar "TipoSolicitud"
+↓
+Ramificación según tipo para procesamiento específico
+Acciones de Power Automate:
+•	Trigger: "When an item is created"
+•	Action: "Get item" (para obtener todos los detalles)
+•	Action: "Condition" con ramificaciones por tipo
+2.2 Enriquecimiento de Datos
+Obtener datos adicionales de lista específica según tipo
+↓
+Obtener datos de aprobadores asignados
+↓
+Construir conjunto de datos completo para la tarjeta adaptativa
+Acciones de Power Automate:
+•	Action: "Get item" de lista específica (usando IDListaDetalle)
+•	Action: "Get items" de lista "Configuracion_Aprobadores"
+•	Action: "Compose" para estructurar datos completos
+2.3 Notificación a Aprobadores
+Determinar canal de Teams según configuración
+↓
+Generar tarjeta adaptativa específica para el tipo de solicitud
+↓
+Publicar tarjeta en canal correspondiente
+↓
+Registrar URL del mensaje en SharePoint
+Acciones de Power Automate:
+•	Action: "Post adaptive card in a chat or channel" a Teams
+•	Action: "Update item" para guardar URL de conversación
+3. Diseño de Tarjetas Adaptativas
+Cada tipo de solicitud tendrá una tarjeta adaptativa optimizada, pero con estructura consistente.
+3.1 Estructura General de Tarjetas
+{
+  "type": "AdaptiveCard",
+  "body": [
+    {
+      "type": "TextBlock",
+      "size": "Medium",
+      "weight": "Bolder",
+      "text": "${solicitudTitulo}"
+    },
+    {
+      "type": "ColumnSet",
+      "columns": [
+        {
+          "type": "Column",
+          "items": [
+            {
+              "type": "TextBlock",
+              "weight": "Bolder",
+              "text": "Solicitante:"
+            },
+            {
+              "type": "TextBlock",
+              "text": "${solicitante}",
+              "wrap": true
+            }
+          ],
+          "width": "stretch"
+        },
+        {
+          "type": "Column",
+          "items": [
+            {
+              "type": "TextBlock",
+              "weight": "Bolder",
+              "text": "Tiempo Transcurrido:"
+            },
+            {
+              "type": "TextBlock",
+              "text": "${tiempoTranscurrido} min",
+              "color": "${if(tiempoTranscurrido > tiempoAlerta, 'attention', 'good')}",
+              "wrap": true
+            }
+          ],
+          "width": "stretch"
+        }
+      ]
+    },
+    {
+      "type": "FactSet",
+      "facts": ${camposEspecificos}
+    },
+    {
+      "type": "TextBlock",
+      "weight": "Bolder",
+      "text": "Comentarios:"
+    },
+    {
+      "type": "TextBlock",
+      "text": "${comentarios}",
+      "wrap": true
+    },
+    {
+      "type": "Input.Text",
+      "id": "comentariosRespuesta",
+      "placeholder": "Ingrese comentarios (opcional)",
+      "isMultiline": true
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.Submit",
+      "title": "Aprobar",
+      "data": {
+        "accion": "aprobar",
+        "idSolicitud": "${idSolicitud}"
+      },
+      "style": "positive"
+    },
+    {
+      "type": "Action.Submit",
+      "title": "Rechazar",
+      "data": {
+        "accion": "rechazar",
+        "idSolicitud": "${idSolicitud}"
+      },
+      "style": "destructive"
+    }
+  ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.5"
+}
+3.2 Variaciones por Tipo de Solicitud
+Cada tipo de solicitud mostrará campos específicos relevantes:
+Ejemplo: Liberación Nota de Venta
+- Sucursal
+- Nota de Venta
+- Cliente
+- Monto
+- Fecha de Liberación
+Ejemplo: Excepción Cheques
+- Sucursal
+- RUT Cliente
+- RUT Girador
+- Números de Cheque
+- Motivo Rechazo ORSAN
+3.3 Indicadores Visuales
+•	Código de colores:
+o	Verde: Dentro del SLA
+o	Amarillo: Acercándose al límite (80% del SLA)
+o	Rojo: Excedido el SLA
+•	Etiquetas de prioridad:
+o	Normal: Solicitudes regulares
+o	Alta: Solicitudes que requieren atención inmediata
+o	Urgente: Para solicitudes que han excedido el SLA
+4. Procesamiento de Respuestas
+4.1 Captura de Respuesta
+Cuando se recibe respuesta a tarjeta adaptativa
+↓
+Extraer ID de solicitud y decisión (aprobar/rechazar)
+↓
+Registrar comentarios adicionales
+↓
+Calcular tiempo total de respuesta (en minutos)
+Acciones de Power Automate:
+•	Trigger: "When a Teams message contains an adaptive card response"
+•	Action: "Compose" para extraer y formatear datos de respuesta
+•	Action: "Convert time zone" para cálculos precisos de tiempo
+4.2 Actualización de SharePoint
+Actualizar registro en lista principal:
+↓
+- Estado = Aprobado/Rechazado
+- Aprobador = Usuario que respondió
+- FechaRespuesta = Fecha/hora actual
+- TiempoRespuesta = Minutos transcurridos
+- ComentariosRespuesta = Texto ingresado
+↓
+Actualizar indicador de SLA según tiempo transcurrido
+Acciones de Power Automate:
+•	Action: "Update item" en "Solicitudes_Maestro"
+•	Action: "Condition" para determinar cumplimiento de SLA
+5. Notificación al Solicitante
+5.1 Diseño de Notificación
+Se enviará una notificación por Teams al solicitante con:
+Solicitud #[ID]: [APROBADA/RECHAZADA]
+—————————————————————
+Tipo: [Tipo de Solicitud]
+Fecha de solicitud: [Fecha]
+Tiempo de respuesta: [X] minutos
+Aprobador: [Nombre]
+
+Comentarios: [Texto de respuesta]
+
+[Enlace para ver detalles]
+Acciones de Power Automate:
+•	Action: "Post message in a chat or channel" a Teams
+•	Action: "Send an email" como respaldo (opcional)
+5.2 Variaciones de Notificación
+•	Aprobada: Fondo verde, texto positivo
+•	Rechazada: Fondo gris, explicación del rechazo
+•	Información adicional: Cuando el aprobador solicita más datos
+6. Sistema de SLAs y Alertas
+6.1 Temporizador de Verificación
+Crear un trabajo programado al recibir nueva solicitud
+↓
+Verificar estado cada 5 minutos
+↓
+Si continúa pendiente, calcular tiempo transcurrido
+↓
+Aplicar reglas de escalamiento según umbrales
+Acciones de Power Automate:
+•	Action: "Create a timed job" al inicio del flujo
+•	Flow secundario: "Do until" con verificación periódica
+6.2 Niveles de Alerta
+Nivel 1 (70% del SLA)
+•	Cambio de color en tarjeta a amarillo
+•	Sin notificación adicional
+Nivel 2 (90% del SLA)
+•	Cambio de color en tarjeta a rojo
+•	Mensaje adicional en canal con mención a todos los aprobadores
+•	Texto: "⚠️ Solicitud #123 está por exceder tiempo máximo de respuesta"
+Nivel 3 (100%+ del SLA)
+•	Notificación a supervisor
+•	Texto: "🚨 Solicitud #123 ha excedido tiempo máximo de respuesta"
+•	Aplicación automática de regla por defecto (opcional para fase posterior)
+7. Canales de Teams
+7.1 Estructura de Canales
+Para una gestión eficiente, se usará esta estructura en Teams:
+•	Canal General: Anuncios y comunicación global
+•	Canal Aprobaciones-NV: Liberaciones de notas de venta
+•	Canal Aprobaciones-Pagos: Confirmaciones y transferencias
+•	Canal Aprobaciones-Excepciones: Cheques y casos especiales
+•	Canal Aprobaciones-Otros: Resto de solicitudes
+•	Canal SLA-Alertas: Notificaciones de casos críticos (opcional)
+7.2 Configuración de Notificaciones
+•	Notificaciones persistentes para mensajes nuevos
+•	Sonido de alerta para solicitudes nuevas
+•	Badge counter activado para canal de aprobaciones
+8. Plan de Implementación
+8.1 Cronograma de Desarrollo
+Día	Actividad	Detalle
+1-2	Diseño de tarjetas adaptativas	Plantillas para cada tipo de solicitud
+3-5	Desarrollo de flujo principal	Estructura básica y lógica core
+6-7	Implementación de notificaciones	Sistema de alertas y respuestas
+8-9	Pruebas de integración	Verificación end-to-end
+10	Ajustes finales	Optimización y documentación
+8.2 Requisitos de Implementación
+•	Licencias Power Automate por usuario o Plan Premium
+•	Permisos de Teams para creación de canales
+•	Acceso como administrador a SharePoint
+•	Cuenta de servicio para flujos automatizados (recomendado)
+8.3 Pruebas Críticas
+•	Prueba de carga: simulación de 20+ solicitudes simultáneas
+•	Prueba de tiempos: verificación de cálculos de SLA
+•	Prueba de concurrencia: múltiples aprobadores respondiendo
+•	Prueba de recuperación: comportamiento ante fallos de conexión
+9. Consideraciones de Escalabilidad
+9.1 Optimizaciones para Alto Volumen
+•	Uso de variables de entorno para configuración
+•	Agrupación de notificaciones en períodos de alta demanda
+•	Limitación de mensajes duplicados
+•	Cancelación automática de trabajos temporales completados
+9.2 Monitoreo de Rendimiento
+•	Registro de tiempos de ejecución del flujo
+•	Alertas automáticas si el flujo excede tiempos esperados
+•	Plan de respaldo manual en caso de indisponibilidad
+10. Documentación y Soporte
+10.1 Guías para Aprobadores
+•	Instrucciones para responder tarjetas adaptativas
+•	Interpretación de códigos de colores y prioridades
+•	Protocolos para solicitudes de información adicional
+10.2 Mantenimiento
+•	Procedimiento para modificar textos de notificaciones
+•	Ajuste de tiempos de SLA por tipo de solicitud
+•	Cambios en la asignación de canales
+
+Implementación y Configuración de Microsoft Teams para el Sistema de Aprobaciones
+1. Configuración de la Estructura en Teams
+1.1 Creación del Equipo Dedicado
+Se creará un equipo específico en Microsoft Teams llamado "Aprobaciones CyC" con la siguiente estructura:
+Equipo: Aprobaciones CyC
+├── Canal: General
+├── Canal: Liberaciones-NV
+├── Canal: Excepciones-Cheques
+├── Canal: Transferencias
+├── Canal: Devoluciones-TC
+└── Canal: Otros
+Pasos de implementación:
+1.	Acceder a Teams como administrador
+2.	Seleccionar "Crear un equipo" > "Desde cero" > "Privado"
+3.	Nombrar el equipo como "Aprobaciones CyC"
+4.	Agregar descripción: "Sistema centralizado de aprobaciones entre Cajas y Créditos y Cobranza"
+5.	Crear los canales específicos según la estructura
+1.2 Configuración de Permisos
+Rol	Miembros	Permisos
+Propietarios	Supervisor CyC, Administrador Sistema	Control total del equipo y canales
+Miembros	Analistas CyC (9)	Acceso a todos los canales, permisos para aprobar/rechazar
+Invitados limitados	Cajeras/Solicitantes (23)	Solo reciben notificaciones, sin acceso a canales de aprobación
+Pasos de implementación:
+1.	En la configuración del equipo, ir a "Administrar equipo"
+2.	Agregar propietarios y miembros según los roles definidos
+3.	Configurar permisos específicos para cada canal
+4.	Habilitar notificaciones para usuarios externos al equipo
+2. Diseño e Implementación de Tarjetas Adaptativas
+2.1 Diseño Base de Tarjetas
+Todas las tarjetas adaptativas seguirán esta estructura básica:
+ 
+Elementos comunes:
+•	Encabezado con tipo de solicitud e ID
+•	Información del solicitante y sucursal
+•	Indicador visual de tiempo transcurrido
+•	Datos específicos según tipo de solicitud
+•	Botones de acción (Aprobar/Rechazar)
+•	Campo para comentarios
+2.2 Implementación Técnica
+Para implementar las tarjetas adaptativas en Microsoft Teams:
+{
+  "type": "AdaptiveCard",
+  "body": [
+    {
+      "type": "TextBlock",
+      "size": "Large",
+      "weight": "Bolder",
+      "text": "${tipoSolicitud} - Solicitud #${idSolicitud}",
+      "wrap": true,
+      "style": "heading"
+    },
+    {
+      "type": "ColumnSet",
+      "columns": [
+        {
+          "type": "Column",
+          "width": "auto",
+          "items": [
+            {
+              "type": "Image",
+              "url": "${urgenciaIconUrl}",
+              "size": "Small",
+              "altText": "Indicador de urgencia"
+            }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": "stretch",
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "**Tiempo:** ${tiempoTranscurrido} min",
+              "color": "${colorTiempo}",
+              "wrap": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FactSet",
+      "facts": [
+        {
+          "title": "Solicitante",
+          "value": "${nombreSolicitante}"
+        },
+        {
+          "title": "Sucursal",
+          "value": "${sucursal}"
+        },
+        {
+          "title": "Fecha",
+          "value": "${fechaSolicitud}"
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "style": "emphasis",
+      "items": ${camposEspecificos}
+    },
+    {
+      "type": "TextBlock",
+      "text": "**Comentarios:**",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "${comentarios}",
+      "wrap": true
+    },
+    {
+      "type": "Input.Text",
+      "id": "comentariosAprobador",
+      "placeholder": "Ingrese sus comentarios aquí...",
+      "isMultiline": true
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.Submit",
+      "title": "✅ Aprobar",
+      "data": {
+        "action": "aprobar",
+        "idSolicitud": "${idSolicitud}"
+      },
+      "style": "positive"
+    },
+    {
+      "type": "Action.Submit",
+      "title": "❌ Rechazar",
+      "data": {
+        "action": "rechazar",
+        "idSolicitud": "${idSolicitud}"
+      },
+      "style": "destructive"
+    }
+  ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.5"
+}
+Pasos de implementación:
+1.	Crear plantillas JSON para cada tipo de solicitud
+2.	Implementar lógica de variable en Power Automate para generar tarjetas dinámicas
+3.	Configurar códigos de color según tiempo transcurrido
+4.	Probar renderizado en diferentes dispositivos
+3. Configuración de Notificaciones
+3.1 Configuración de Alertas por Canal
+Canal	Alertas	Prioridad
+Liberaciones-NV	Banner + Sonido	Alta
+Excepciones-Cheques	Banner + Sonido	Alta
+Transferencias	Banner	Media
+Devoluciones-TC	Banner	Media
+Otros	Icono	Baja
+Pasos de implementación:
+1.	Cada analista debe configurar sus preferencias de notificación para cada canal
+2.	Instrucciones para habilitar notificaciones de escritorio
+3.	Configuración de notificaciones móviles para respuesta rápida
+4.	Instrucciones para priorización de canales
+3.2 Alertas de SLA en Teams
+Para casos que se acercan al tiempo límite, se implementarán:
+1.	Recordatorios en canal: Mensajes adicionales con mención a aprobadores
+2.	Notificaciones prioritarias: Mensajes con distintivo "Urgente"
+3.	Alertas de equipo: Para casos que excedan el SLA
+Ejemplo de mensaje de alerta SLA:
+@AprobadoresCyC ATENCIÓN ⚠️ 
+La solicitud #12345 (Liberación NV) lleva 25 minutos sin respuesta.
+Tiempo máximo restante: 5 minutos.
+[Ver solicitud](link)
+4. Implementación de Interacciones con Power Automate
+4.1 Configuración del Conector Teams en Power Automate
+Acciones principales a configurar:
+1.	Post adaptive card in a chat or channel
+o	Target: Canal específico según tipo de solicitud
+o	Card data: JSON dinámico según plantilla
+o	Importance: Normal/High según urgencia
+2.	Wait for a response
+o	Timeout setting: Configurado según SLA (ej. 30 minutos)
+o	Error handling: Notificación alternativa si vence tiempo
+3.	Post message as the Flow bot
+o	Para notificaciones de seguimiento y alertas
+o	Configuración de formato markdown para mejor presentación
+4.2 Configuración del Webhook para Respuestas
+Para capturar las respuestas de aprobación/rechazo:
+1.	Crear HTTP Trigger en Power Automate
+2.	Configurar procesamiento de JSON de respuesta
+3.	Implementar lógica de verificación de usuario
+4.	Establecer estructura de datos para almacenar respuesta
+5. Pasos Detallados de Implementación en Teams
+5.1 Creación y Configuración de Canales (Día 1)
+1.	Crear el equipo "Aprobaciones CyC":
+o	Administrador > Teams > + Crear equipo > Desde cero
+o	Tipo de equipo: Privado
+o	Nombre: "Aprobaciones CyC"
+2.	Crear los canales requeridos:
+o	Seleccionar "..." junto al nombre del equipo > Agregar canal
+o	Crear cada uno de los canales especificados en la estructura
+o	Establecer "Liberaciones-NV" como canal destacado
+3.	Configurar permisos por canal:
+o	Para cada canal: "..." > Administrar canal
+o	Establecer moderación donde sea necesario
+o	Configurar permisos de publicación
+5.2 Instalación de Power Automate App (Día 1)
+1.	Ir a la tienda de Teams
+2.	Buscar e instalar "Power Automate"
+3.	Configurar permisos necesarios
+4.	Anclar la aplicación para fácil acceso
+5.3 Configuración de Tarjetas Adaptativas (Días 2-3)
+1.	Preparar plantillas JSON:
+o	Crear un archivo JSON para cada tipo de tarjeta
+o	Definir variables sustituibles
+o	Validar estructura con Adaptive Cards Designer
+2.	Implementar en Power Automate:
+o	Crear variables para almacenar plantillas
+o	Configurar sustitución dinámica de datos
+o	Establecer lógica de colores según tiempo
+3.	Probar visualización:
+o	Enviar tarjetas de prueba a un canal de test
+o	Verificar en diferentes dispositivos
+o	Ajustar formato según sea necesario
+5.4 Pruebas de Interacción (Día 4)
+1.	Probar flujo completo:
+o	Crear solicitud de prueba
+o	Verificar notificación en Teams
+o	Probar botones de aprobación/rechazo
+o	Confirmar actualización en SharePoint
+2.	Verificar gestión de tiempos:
+o	Probar cambios de color según tiempo transcurrido
+o	Verificar alertas de SLA
+o	Comprobar notificaciones escaladas
+5.5 Configuración para Usuarios (Día 5)
+1.	Agregar usuarios al equipo:
+o	Añadir propietarios (supervisores)
+o	Añadir miembros (analistas CyC)
+o	Configurar permisos específicos
+2.	Configurar notificaciones personales:
+o	Instrucciones para configurar alertas por canal
+o	Configuración de notificaciones móviles
+o	Ajustes de sonido y banner
+6. Pruebas Específicas de Teams
+6.1 Escenarios de Prueba Críticos
+1.	Notificaciones simultáneas:
+o	Crear 10+ solicitudes en menos de 1 minuto
+o	Verificar que todas las notificaciones lleguen correctamente
+o	Comprobar que no haya duplicados
+2.	Respuestas concurrentes:
+o	Simular múltiples aprobadores intentando responder a la misma solicitud
+o	Verificar manejo adecuado de condiciones de carrera
+o	Confirmar que solo se registre una respuesta
+3.	Rendimiento en diferentes dispositivos:
+o	Probar en escritorio (Windows/Mac)
+o	Probar en móviles (iOS/Android)
+o	Verificar visualización correcta de tarjetas
+4.	Pruebas de resiliencia:
+o	Simular caída de conexión durante respuesta
+o	Verificar recuperación de estado
+o	Comprobar manejo de timeouts
+6.2 Lista de Verificación Final
+•	[ ] Equipo creado con estructura correcta
+•	[ ] Canales configurados con permisos adecuados
+•	[ ] Tarjetas adaptativas renderizando correctamente
+•	[ ] Botones de acción funcionando según lo esperado
+•	[ ] Notificaciones llegando oportunamente
+•	[ ] Alertas de SLA activándose correctamente
+•	[ ] Usuarios con acceso según su rol
+•	[ ] Documentación de usuario preparada
+7. Documentación para Usuarios Finales
+7.1 Guía para Analistas CyC
+Contenido principal:
+•	Acceso al equipo y canales
+•	Interpretación de tarjetas adaptativas
+•	Proceso de aprobación/rechazo
+•	Configuración de notificaciones recomendada
+•	Gestión de alertas SLA
+•	Procedimiento para casos especiales
+7.2 Guía para Solicitantes
+Contenido principal:
+•	Cómo interpretar notificaciones de Teams
+•	Seguimiento del estado de solicitudes
+•	Respuesta a peticiones de información adicional
+•	Procedimiento ante rechazos
+8. Consideraciones de Soporte para Teams
+8.1 Problemas Comunes y Soluciones
+Problema	Solución
+No llegan notificaciones	Verificar configuración personal de notificaciones
+Tarjeta no muestra botones	Reinstalar aplicación Teams / Limpiar caché
+Error al aprobar/rechazar	Capturar código de error y reintentar
+Solicitud ya procesada	Verificar si otro aprobador ya respondió
+Teams no instalado en móvil	Guía de instalación y configuración
+8.2 Procedimiento de Escalamiento
+1.	Nivel 1: Usuario avanzado en cada área
+2.	Nivel 2: Soporte técnico de Teams
+3.	Nivel 3: Administrador de Power Automate
+8.3 Monitoreo de Teams
+•	Verificación diaria de conexión entre Power Automate y Teams
+•	Comprobación de tiempos de respuesta de notificaciones
+•	Monitoreo de tasa de fallos en interacciones con tarjetas
+
