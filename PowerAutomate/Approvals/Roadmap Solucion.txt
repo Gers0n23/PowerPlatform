@@ -41,6 +41,9 @@ NombreCliente	Texto	Nombre del cliente
 MedioPagoFrecuente	Texto	Método habitual de pago del cliente
 FechaCompromisoPago	Fecha	Para liberaciones con facturas vencidas
 TipoSolicitudDetalle	Opción	Subtipo dentro de esta categoría
+DetalleDevolucionCheque    Texto    Número de cheque a devolver
+MontoEliminar              Moneda   Valor a eliminar
+MotivoEliminacion          Texto múltiple   Justificación de la eliminación solicitada
 1.2.2 Lista "Solicitudes_Flota"
 Campo	Tipo	Descripción
 ID	Autonumérico	Identificador único
@@ -140,6 +143,20 @@ IDSolicitudMaestro	Lookup	Relación con Solicitudes_Maestro
 TipoDocumento	Opción	Comprobante/Boleta/Cheque/Formulario/Otro
 FechaSubida	Fecha/Hora	Momento de la carga (automático)
 UsuarioSubida	Usuario	Quien cargó el documento
+1.5 Vistas Personalizadas
+Se han creado vistas personalizadas en cada lista para facilitar la gestión de datos:
+1.5.1 Vistas para "Solicitudes_Maestro":
+- Pendientes por Aprobar: Muestra solicitudes con Estado = "Pendiente"
+- Aprobadas Últimos 7 Días: Solicitudes aprobadas en la última semana
+- Rechazadas Últimos 7 Días: Solicitudes rechazadas en la última semana
+1.5.2 Vistas comunes para listas de detalle:
+- Solicitudes Pendientes: Filtradas por IDSolicitudMaestro.Estado = "Pendiente"
+- Últimos 30 Días: Solicitudes creadas en el último mes
+1.5.3 Vistas para "Configuracion_Aprobadores":
+- Por Tipo de Solicitud: Organiza configuraciones por tipo de solicitud
+1.5.4 Vistas para "Biblioteca_Documentos":
+- Documentos Recientes: Archivos subidos en los últimos 7 días
+- Por Tipo: Documentos agrupados según su categoría
 2. Flujo de Power Automate Centralizado
 Se implementará un único flujo de Power Automate que atenderá todo el proceso de aprobación:
 2.1 Desencadenador
