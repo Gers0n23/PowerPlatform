@@ -1,8 +1,9 @@
-Solicitudes de flota - Jefes de Servicio - Jefe de Sucursal
-Confirmación de Transferencias - Cajeras
-Solicitud e devolución o anulación - Administrativo comercial - Jefe de Sucursal
-Atención de Sucursales - Cajeras
-Excepción de Cheques - Cajeras
+Formulario	PerfildeUsuario
+SolicitudesFlota	Jefe de Sucursal
+SolicitudConfirmaciónTransfencias	Cajeras(os)
+SolicitudDevolucionAnulacionTC	Administrativo Comercial, Jefe de Sucursal
+SolicitudAtenciónSucursales	Cajeras(os)
+SolicitudExcepcionCheques	Cajeras(os)
+RegistroCobranzaAsistentes	Administrativo Credito y Cobranza
+FormularioKPICajeras	Administrativo Credito y Cobranza
 
-Registro de Cobranza - CyC
-KPI Cajeras - CyC
