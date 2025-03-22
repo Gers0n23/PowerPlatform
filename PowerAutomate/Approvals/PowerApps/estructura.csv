@@ -1,0 +1,21 @@
+- OnStart (inicialización de variables globales)
+- MainScreen (pantalla principal con cards)
+- NewRequestScreen (selección de tipo de solicitud)
+- FormTemplateScreen (formulario base con secciones comunes)
+- MyRequestsScreen (historial de solicitudes)
+- MetricsScreen (métricas y estadísticas)
+- DetailScreen (ver detalles de una solicitud)
+
+funcion de autollenado
+
+// En la pantalla OnVisible o App OnStart
+Set(currentUser, User());
+Set(userName, currentUser.FullName);
+Set(userEmail, currentUser.Email);
+
+// Para obtener la sucursal, conectar con SharePoint list que mapee usuarios a sucursales
+Set(userBranch, LookUp(UserProfiles, Email = userEmail).Branch);
+
+// En campos de formulario
+Default: userName  // Para campo de nombre
+Default: userBranch // Para campo de sucursal
