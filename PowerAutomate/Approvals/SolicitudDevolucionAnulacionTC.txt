@@ -1,0 +1,155 @@
+# Solicitud de Devolución o Anulación de TC  
+
+Recuerda completar todos los campos requeridos según tipo de solicitud.  
+
+---  
+
+**DATOS GENERALES**  
+
+1. Sucursal * (Seleccione una opción)  
+- [ ] Antofagasta  
+- [ ] Calama  
+- [ ] Chillan FC  
+- [ ] Concepción  
+- [ ] Copiapó  
+- [ ] Coquimbo FC  
+- [ ] Curicó  
+- [ ] General Velásquez  
+- [ ] Los Ángeles FC  
+- [ ] Osorno FC  
+- [ ] Puerta Norte  
+- [ ] Puerta Sur  
+- [ ] Puerto Montt  
+- [ ] Puerto Montt FC  
+- [ ] Rancagua FC  
+- [ ] Talca  
+- [ ] Talcahuano FC  
+- [ ] Televenta  
+- [ ] Temuco  
+- [ ] Temuco FC  
+- [ ] Valdivia FC  
+- [ ] Valparaiso  
+- [ ] Viña del Mar  
+
+2. Nombre de quien realiza solicitud (Jefe de sucursal) *  
+
+3. Fecha de envío a CyC *  
+
+---  
+
+**DATOS DEL CLIENTE**  
+
+4. BP cliente (asociado a la solicitud) *  
+(El valor debe ser un número)  
+
+5. RUT cliente  
+
+6. Tipo de solicitud * (Seleccione una opción)  
+- [ ] Devolución a cliente  
+- [ ] Devolución cliente "Genérico"  
+- [ ] Devolución a tercero  
+- [ ] Anulación TC  
+
+7. Adjuntar Boleta de cliente *  
+[ ][*] **Cargar archivo**  
+*Límites: 1 archivo (10MB máximo). Formatos permitidos: Word, Excel, PPT, PDF, Imagen, Video, Audio*  
+
+---  
+
+**DATOS DE DEVOLUCIÓN**  
+
+8. Tipo de saldo a favor *  
+○ Nota de crédito  
+○ Anticipo  
+
+9. Número de Boleta o Factura (Si existe)  
+
+10. Fecha de emisión de Boleta o Factura (Si existe)  
+
+11. Número Nota de crédito (Si existe)  
+
+12. Fecha de emisión de Nota de crédito (Si existe)  
+
+13. Monto de devolución $  
+
+14. Motivo de Nota de crédito *  
+○ Producto o Servicio no le sirve/no gustó o no corresponde  
+○ Garantía  
+○ Otras  
+
+---  
+
+**DATOS PARA TRANSFERENCIA**  
+
+15. Nombre *  
+
+16. RUT *  
+
+17. Banco *  
+
+18. Tipo de cuenta *  
+- [ ] Cuenta vista  
+- [ ] Cuenta Corriente  
+
+19. Número de cuenta *  
+
+20. Correo electrónico *  
+
+---  
+
+**DEVOLUCIÓN CLIENTE GENÉRICO**  
+
+21. BP para traspasar Nota de crédito *  
+
+---  
+
+**DEVOLUCIÓN A TERCEROS**  
+
+22. Formato de devolución a terceros (Cargar archivo)  
+[ ][*] **Cargar archivo**  
+*Límites: 1 archivo (100MB máximo). Formatos permitidos: Word, Excel, PPT, PDF, Imagen, Video, Audio*  
+
+23. Cédula de identidad (Cargar archivo)  
+[ ][*] **Cargar archivo**  
+*Límites: 1 archivo (100MB máximo). Formatos permitidos: Word, Excel, PPT, PDF, Imagen, Video, Audio*  
+
+---  
+
+**DATOS PARA ANULACIÓN DE TC**  
+
+24. Fecha de pago *  
+
+25. Código de comercio *  
+(El valor debe ser un número)  
+
+26. Monto de la venta $ *  
+
+27. N° de Tarjeta de crédito *  
+
+28. Nombre titular tarjeta de crédito *  
+
+29. N° de cuotas *  
+
+30. N° de Boleta o Factura  
+
+31. Fecha de emisión de Boleta o Factura  
+
+32. N° Nota de crédito  
+
+33. Fecha de emisión de Nota de crédito  
+
+34. Motivo de Nota de crédito  
+- [ ] Producto o Servicio no le sirve/no gustó o no corresponde  
+- [ ] Garantía  
+- [ ] Otras  
+
+35. Devolución  
+- [ ] Total  
+- [ ] Parcial  
+
+36. Monto a devolver $  
+
+37. Correo electrónico  
+
+---  
+*Nota: Este contenido no está creado ni respaldado por Microsoft. Los datos que envíe se enviarán al propietario del formulario.*  

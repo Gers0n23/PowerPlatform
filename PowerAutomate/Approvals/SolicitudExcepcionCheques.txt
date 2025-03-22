@@ -1,0 +1,96 @@
+# SOLICITUD DE EXCEPCIÓN DE CHEQUES  
+
+Recuerde que todos los cheques deben ser verificados en ORSAN. Ante un rechazo, consulte al cliente si tiene otro medio de pago disponible. Solo si la respuesta es negativa, solicite evaluación excepcional a CyC.  
+*Si un cheque excede los 120 días desde la emisión de la factura, indique el motivo en Observaciones (índole comercial u otra condición).*  
+
+---  
+
+**DATOS GENERALES**  
+
+1. Nombre de quien realiza solicitud (Cajera/Jefe de sucursal o Administrativo comercial) *  
+
+2. Sucursal * (Seleccione una opción)  
+- [ ] Antofagasta  
+- [ ] Calama  
+- [ ] Chillan FC  
+- [ ] Concepción  
+- [ ] Copiapó  
+- [ ] Coquimbo FC  
+- [ ] Curicó  
+- [ ] General Velásquez  
+- [ ] Los Ángeles FC  
+- [ ] Osorno FC  
+- [ ] Puerta Norte  
+- [ ] Puerta Sur  
+- [ ] Puerto Montt  
+- [ ] Puerto Montt FC  
+- [ ] Rancagua FC  
+- [ ] Talca  
+- [ ] Talcahuano FC  
+- [ ] Televenta  
+- [ ] Temuco  
+- [ ] Temuco FC  
+- [ ] Valdivia FC  
+- [ ] Valparaiso  
+- [ ] Viña del Mar  
+
+3. BP cliente (asociado a la solicitud)  
+(El valor debe ser un número)  
+
+4. RUT Girador  
+
+---  
+
+**DATOS DEL CLIENTE Y OPERACIÓN**  
+
+5. RUT Cliente  
+
+6. Condición de pago * (Seleccione una opción)  
+- [ ] Contado  
+- [ ] Línea de crédito  
+
+7. Tipo de pago * (Seleccione una opción)  
+- [ ] Venta  
+- [ ] Pago de facturas  
+
+8. Folio de la factura/as a pagar *  
+(El valor debe ser un número)  
+
+9. Número de nota de venta asociada a la solicitud *  
+(El valor debe ser un número)  
+
+10. Monto de la venta o pago de facturas $ *  
+(El valor debe ser un número)  
+
+11. Motivo de rechazo ORSAN *  
+
+12. Fechas de vencimiento de los cheques *  
+
+---  
+
+**DETALLE DE CHEQUES**  
+
+13. N° de cheque *  
+(El valor debe ser un número)  
+
+14. N° de cheque  
+(El valor debe ser un número)  
+
+15. N° de cheque  
+(El valor debe ser un número)  
+
+16. N° de cheque  
+(El valor debe ser un número)  
+
+17. N° de cheque  
+(El valor debe ser un número)  
+
+---  
+
+**OBSERVACIONES**  
+
+18. Observaciones *  
+*Indique aquí antecedentes relevantes para la decisión. Si algún cheque excede 120 días desde la emisión de la factura, detalle el motivo (ej: índole comercial, situación económica, etc.).*  
+
+---  
+*Nota: Este contenido no está creado ni respaldado por Microsoft. Los datos que envíe se enviarán al propietario del formulario.*  

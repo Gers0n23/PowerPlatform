@@ -1,0 +1,45 @@
+# Registro Cobranza Asistentes
+
+Favor recordar que todos los clientes deben ser gestionados y todas las gestiones deben ser registradas.  
+Tu labor es muy importante.  
+
+---  
+
+## 1. Asistente Cobranza * (Seleccione una opción)  
+- [ ] Claudio  
+- [ ] Daniela  
+- [ ] Lisbeth  
+- [ ] Yuliana  
+- [ ] Pamela  
+- [ ] Natalia  
+- [ ] Barbara  
+- [ ] Francisca  
+- [ ] Victor  
+
+## 2. BP Cliente *  
+(El valor debe ser un número)  
+
+## 3. Rut (Opcional)  
+
+## 4. Razón Social  
+
+## 5. Tipo Gestión * (Seleccione una opción)  
+- [ ] Correo Electrónico  
+- [ ] Llamada telefónica  
+- [ ] Por liberación de NV  
+- [ ] Protesto  
+- [ ] Otras  
+
+## 6. Fecha compromiso pago (Sólo si existe)  
+
+## 7. Observaciones  
+
+## 8. Seguimiento (casos pendientes)  
+
+## 9. Motivo seguimiento  
+
+## 10. Estado del pago (sólo si existe)  
+- [ ] Pagado  
+
+---  
+*Nota: Este contenido no está creado ni respaldado por Microsoft. Los datos que envíe se enviarán al propietario del formulario.*  

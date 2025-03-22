@@ -1,0 +1,62 @@
+# Solicitud Confirmación de transferencias, depósitos y Webpay  
+
+CYC informará la respuesta a su solicitud vía correo electrónico y Teams.  
+
+---  
+
+**DATOS GENERALES**  
+
+1. Caja (Sucursal) * (Seleccione una opción)  
+- [ ] Caja Antofagasta  
+- [ ] Caja Calama  
+- [ ] Caja Copiapó  
+- [ ] Caja Chillán  
+- [ ] Caja Concepción  
+- [ ] Caja Coquimbo FC  
+- [ ] Caja Curicó  
+- [ ] Caja Velasquez 1  
+- [ ] Caja Velasquez 2  
+- [ ] Caja Los Angeles FC  
+- [ ] Caja Osorno FC  
+- [ ] Caja Puerta Norte  
+- [ ] Caja Puerta Sur  
+- [ ] Caja Puerto Montt  
+- [ ] Caja Puerto Montt FC  
+- [ ] Caja Rancagua FC  
+- [ ] Caja Talca  
+- [ ] Caja Talcahuano FC  
+- [ ] Caja Temuco  
+- [ ] Caja Temuco FC  
+- [ ] Caja Valdivia FC  
+- [ ] Caja Valparaíso  
+- [ ] Caja Viña del Mar  
+- [ ] Caja Casa Matriz  
+
+2. BP Cliente o RUT *  
+(El valor debe ser un número)  
+
+---  
+
+**DETALLES DE LA OPERACIÓN**  
+
+3. Tipo de confirmación * (Seleccione una opción)  
+- [ ] Transferencia  
+- [ ] Depósito  
+- [ ] Webpay  
+
+4. Fecha de transferencia, depósito o webpay *  
+
+5. RUT girador o Nombre *  
+*Formato RUT: 11000123-2 (sin puntos). Si no tiene RUT, escriba el nombre completo.*  
+
+6. Monto $ *  
+(El valor debe ser un número)  
+
+7. Comprobante de transferencia, depósito o webpay *  
+[ ][*] **Cargar archivo**  
+*Límites: 1 archivo (10MB máximo). Formatos permitidos: Word, Excel, PPT, PDF, Imagen, Video, Audio*  
+
+8. Observaciones  
+
+---  
+*Nota: Este contenido no está creado ni respaldado por Microsoft. Los datos que envíe se enviarán al propietario del formulario.*  

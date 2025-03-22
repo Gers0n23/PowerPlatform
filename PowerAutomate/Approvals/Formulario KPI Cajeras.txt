@@ -1,0 +1,72 @@
+Formulario KPI Cajeras
+Hola, Gerson Alejandro. Cuando envíe este formulario, el propietario verá su nombre y dirección de correo electrónico.
+Obligatorio
+1.Seleccione opcion
+
+Cheque enmendado
+
+Eliminacion de pago por error
+2.Sucursal
+
+Antofagasta
+
+Calama
+
+Copiapo
+
+Coquimbo
+
+Valparaiso
+
+Viña del Mar
+
+Puerta Norte
+
+Puerta Sur
+
+General Velasquez
+
+Rancagua
+
+Curico
+
+Talca
+
+Chillan
+
+Los Angeles
+
+Talcahuano
+
+Concepcion
+
+Temuco
+
+Temuco FC
+
+Valdivia
+
+Osorno
+
+Puerto Montt
+
+Puerto Montt FC
+3.BP Cliente
+Escriba su respuesta
+4.Fecha cierre de caja
+Especifique la fecha (d/M/yyyy)
+
+5.Nro cheque
+Escriba su respuesta
+6.Monto
+Escriba su respuesta
+7.Motivo error
+Escriba su respuesta
+8.Imagen cheque
+ (Pregunta no anónima
+)
+
+Cargar archivo
+Límite de número de archivos:1
+Límite de tamaño del archivo individual: 10MB
+Tipos de archivo permitidos: Word, Excel, PPT, PDF, Imagen, Vídeo, Audio
